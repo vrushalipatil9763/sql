@@ -4,25 +4,22 @@
 
 --SELECT
 /* 1. Write a query that returns everything in the customer table. */
-SELECT	* FROM customer;
+
 
 
 /* 2. Write a query that displays all of the columns and 10 rows from the cus- tomer table, 
 sorted by customer_last_name, then customer_first_ name. */
-SELECT * 
-FROM customer
-ORDER BY customer_last_name, customer_first_name
-LIMIT 10;
+
+
 
 --WHERE
 /* 1. Write a query that returns all customer purchases of product IDs 4 and 9. */
 -- option 1
-SELECT * FROM customer_purchases
-WHERE product_id IN (4,9);
+
 
 -- option 2
-SELECT * FROM customer_purchases
-WHERE product_id = 4 OR product_id = 9;
+
+
 
 /*2. Write a query that returns all customer purchases and a new calculated column 'price' (quantity * cost_to_customer_per_qty), 
 filtered by vendor IDs between 8 and 10 (inclusive) using either:
@@ -30,14 +27,10 @@ filtered by vendor IDs between 8 and 10 (inclusive) using either:
 	2.  one condition using BETWEEN
 */
 -- option 1
-SELECT *, (quantity * cost_to_customer_per_qty) AS price
-FROM customer_purchases
-WHERE vendor_id=8 OR vendor_id=9 OR vendor_id=10; 
+
 
 -- option 2
-SELECT *, (quantity * cost_to_customer_per_qty) AS price
-FROM customer_purchases
-WHERE vendor_id BETWEEN 8 AND 10; 
+
 
 
 --CASE
@@ -46,43 +39,19 @@ Using the product table, write a query that outputs the product_id and product_n
 columns and add a column called prod_qty_type_condensed that displays the word “unit” 
 if the product_qty_type is “unit,” and otherwise displays the word “bulk.” */
 
-SELECT product_id, product_name
 
-,CASE WHEN product_qty_type = 'unit'
-	  THEN 'unit'
-  ELSE 'bulk'	  
-  END as prod_qty_type_condensed 
-FROM product;
 
-  
 /* 2. We want to flag all of the different types of pepper products that are sold at the market. 
 add a column to the previous query called pepper_flag that outputs a 1 if the product_name 
 contains the word “pepper” (regardless of capitalization), and otherwise outputs 0. */
 
-SELECT product_id, product_name
-
-,CASE WHEN product_qty_type = 'unit'
-	  THEN 'unit'
-	  ELSE 'bulk'	  
-  END as prod_qty_type_condensed 
-
-,CASE WHEN product_name like '%pepper%'
-	  THEN 1
-	  Else 0 
-END as pepper_flag	  
-FROM product;	  
-	   
 
 
 --JOIN
 /* 1. Write a query that INNER JOINs the vendor table to the vendor_booth_assignments table on the 
 vendor_id field they both have in common, and sorts the result by vendor_name, then market_date. */
 
-SELECT * 
-FROM vendor v
-INNER JOIN vendor_booth_assignments vba
-ON v.vendor_id = vba.vendor_id
-ORDER BY vendor_name, market_date;
+
 
 
 /* SECTION 3 */
@@ -90,9 +59,7 @@ ORDER BY vendor_name, market_date;
 -- AGGREGATE
 /* 1. Write a query that determines how many times each vendor has rented a booth 
 at the farmer’s market by counting the vendor booth assignments per vendor_id. */
-SELECT vendor_id, count(booth_number) AS total_rented_booths
-FROM vendor_booth_assignments
-GROUP BY vendor_id;
+
 
 
 /* 2. The Farmer’s Market Customer Appreciation Committee wants to give a bumper 
@@ -101,26 +68,7 @@ of customers for them to give stickers to, sorted by last name, then first name.
 
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
 
-/*SELECT c.customer_id, c.customer_first_name, c.customer_last_name, count(cp.quantity * cp.cost_to_customer_per_qty) as purchase
-FROM customer_purchases as cp
-GROUP BY cp.customer_id
-HAVING purchase > 2000
-INNER JOIN  customer as c
-ON cp.customer_id = c.customer_id
---GROUP BY cp.customer_id
---HAVING (quantity * cost_to_customer_per_qty)>2000
-ORDER BY c.customer_last_name, c.customer_first_name;
-*/
 
-SELECT c.customer_id, c.customer_last_name, c.customer_first_name, purchase
-FROM customer c
-INNER JOIN (
-	SELECT customer_id, sum(quantity * cost_to_customer_per_qty) as purchase
-	FROM customer_purchases
-	GROUP BY customer_id
-	HAVING purchase > 2000
-) cpp ON c.customer_id = cpp.customer_id
-ORDER BY customer_last_name, customer_first_name;
 
 --Temp Table
 /* 1. Insert the original vendor table into a temp.new_vendor and then add a 10th vendor: 
@@ -134,10 +82,6 @@ When inserting the new vendor, you need to appropriately align the columns to be
 VALUES(col1,col2,col3,col4,col5) 
 */
 
-DROP TABLE IF EXISTS temp.new_vendor;
-CREATE TEMP TABLE temp.new_vendor as
-SELECT * from vendor;
-INSERT INTO temp.new_vendor VALUES(10, 'Thomass Superfood Store', 'Fresh Focused','Thomas', 'Rosenthal');  
 
 
 -- Date
